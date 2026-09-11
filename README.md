@@ -18,10 +18,10 @@ instead of opening a PR.
 
 ## Releases & checksums
 
-Each artifact is tagged and released independently, e.g. `wordpress-mu-v0.1.240`
-for the WordPress mu-plugin. The version in the tag is the Memento platform
-version the artifact was last validated against — not an independent semver
-line.
+Installable artifacts (code that runs in your environment, like the WordPress
+mu-plugin) are tagged and released independently, e.g. `wordpress-mu-v0.1.240`.
+The version in the tag is the Memento platform version the artifact was last
+validated against — not an independent semver line.
 
 Release notes include the file's SHA-256 hash. Before installing, verify the
 file you downloaded matches:
@@ -33,6 +33,10 @@ shasum -a 256 <file>
 ...and compare the output against the hash published on the corresponding
 [release](../../releases).
 
+Reference material (setup guides, walkthroughs — nothing you install or run)
+isn't tagged the same way; each guide carries its own "Last updated" date and
+changes are tracked through normal commit history.
+
 ## Layout
 
 ```
@@ -41,6 +45,9 @@ integrations/
     ├── README.md
     └── mu-plugins/
         └── memento-application-passwords.php
+guides/
+├── byok-setup.md
+└── customer-aws-setup.md
 ```
 
 ## License
