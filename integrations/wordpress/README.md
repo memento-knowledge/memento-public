@@ -24,7 +24,7 @@ without such a gate do not need it — Application Passwords work out of the box
 core detects the gate and hides the Application Passwords form (core changeset
 49752, Trac #51939), so the customer cannot create a credential for Memento.
 
-**What it does** (22 lines of code, 98 total with comments; no settings screen,
+**What it does** (22 lines of code, 100 total with comments; no settings screen,
 no external code, no network calls):
 
 1. Keeps the hosting-gate credentials from being read by WordPress as WordPress
@@ -56,3 +56,7 @@ behavior relied on is documented in WordPress core itself and cited directly
 in the plugin file's header comment (`wp-includes/user.php`,
 `wp-includes/load.php`, `wp-admin/user-edit.php`, and the core changesets
 referenced above).
+
+## License
+
+MIT — see [LICENSE](../../LICENSE) in the repository root.

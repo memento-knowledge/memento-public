@@ -29,6 +29,8 @@ If your account team tells you your environment is scheduled to move to a differ
 
 Ask your Memento account team for these, **for the environment being set up** — they differ per environment.
 
+**Verify before you trust.** Confirm these values through a channel you already trust — your named account contact, an existing email thread, or your onboarding ticket — not solely from an unsolicited email or a link. If anything about how you received an ARN feels off, confirm with Memento directly before attaching a policy that grants access to your key.
+
 | Value | Looks like |
 |---|---|
 | **Provisioning role ARN** | `arn:aws:iam::123456789012:role/MementoCustomerProvisioner` |
@@ -135,3 +137,7 @@ All KMS calls Memento makes against your key appear in your own CloudTrail.
 | Memento says the key type is unsupported | Create a symmetric encrypt/decrypt key, not asymmetric or HMAC |
 | `MalformedPolicyDocument` on a Phase B statement | Check the worker or scheduler role ARN, whichever statement failed. If it is correct, wait a minute and retry — IAM is eventually consistent and briefly rejects policies naming a just-created role |
 | Provisioning fails with a KMS access error | The Phase A statement names the wrong principal — check it against the ARN for **this** environment |
+
+## License
+
+MIT — see [LICENSE](../LICENSE) in the repository root.
