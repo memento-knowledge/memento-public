@@ -5,7 +5,7 @@
  *              with a WordPress Application Password while hosting-level HTTP
  *              Basic Auth password protection (e.g. Kinsta htpasswd, WP Engine /
  *              VIP / Pantheon environment locks, nginx auth_basic) stays enabled.
- *              35 lines of code (121 total with comments), no settings screen, no external code, no
+ *              35 lines of code (122 total with comments), no settings screen, no external code, no
  *              network calls. Delete this file to undo everything.
  * Author:      Memento
  * Version:     0.1.240
@@ -48,7 +48,8 @@ if ( ! defined( 'MEMENTO_WP_API_USER' ) ) {
 }
 
 // ---------------------------------------------------------------------------
-// 2. On REST API requests ONLY (path contains /wp-json; the plain-permalink
+// 2. On REST API requests ONLY (path contains /wp-json as a complete
+//    segment — not e.g. /wp-json-something; the plain-permalink
 //    ?rest_route= form is deliberately unsupported, as is XML-RPC — narrower
 //    surface), keep the two credentials apart:
 //      - never let the hosting-level credentials be seen by WordPress as
@@ -65,7 +66,7 @@ if ( ! defined( 'MEMENTO_WP_API_USER' ) ) {
 // ---------------------------------------------------------------------------
 $memento_wp_request_path = (string) parse_url( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '', PHP_URL_PATH );
 
-if ( false !== strpos( $memento_wp_request_path, '/wp-json' ) ) {
+if ( preg_match( '#/wp-json(/|$)#', $memento_wp_request_path ) ) {
 	$memento_wp_auth_header = isset( $_SERVER['HTTP_X_WP_AUTHORIZATION'] ) ? $_SERVER['HTTP_X_WP_AUTHORIZATION'] : '';
 	unset( $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] );
 

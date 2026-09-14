@@ -24,7 +24,7 @@ without such a gate do not need it — Application Passwords work out of the box
 core detects the gate and hides the Application Passwords form (core changeset
 49752, Trac #51939), so the customer cannot create a credential for Memento.
 
-**What it does** (35 lines of code, 121 total with comments; no settings screen,
+**What it does** (35 lines of code, 122 total with comments; no settings screen,
 no external code, no network calls):
 
 1. **On REST API requests only** (paths under `/wp-json`; admin screens, login
