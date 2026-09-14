@@ -5,16 +5,12 @@
  *              with a WordPress Application Password while hosting-level HTTP
  *              Basic Auth password protection (e.g. Kinsta htpasswd, WP Engine /
  *              VIP / Pantheon environment locks, nginx auth_basic) stays enabled.
- *              35 lines of code (122 total with comments), no settings screen, no external code, no
+ *              35 lines of code (118 total with comments), no settings screen, no external code, no
  *              network calls. Delete this file to undo everything.
  * Author:      Memento
- * Version:     0.1.240
+ * Version:     1.2.0
  * License:     MIT
  * License URI: https://opensource.org/licenses/MIT
- *
- * Versioning: this file carries the Memento platform version it was validated
- * against, not an independent version line. Bump it to the platform version
- * whenever the file changes and is re-validated.
  *
  * BACKGROUND (verified against WordPress core source, wp-includes/user.php,
  * wp-includes/load.php, wp-admin/user-edit.php):
