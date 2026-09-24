@@ -1,6 +1,6 @@
 # Customer-Managed Encryption Key (BYOK) Setup
 
-**Memento Knowledge** (memento-knowledge.com) — Last updated: 2026-08-21
+**Memento Knowledge** (memento-knowledge.com) — Last updated: 2026-09-24
 
 You create an AWS KMS key in your own AWS account. Memento uses it to encrypt your environment's data at rest, and gets access only through the key policy you attach. Memento never imports or copies your key material.
 
@@ -36,6 +36,8 @@ Ask your Memento account team for these, **for the environment being set up** �
 | **Provisioning role ARN** | `arn:aws:iam::123456789012:role/MementoCustomerProvisioner` |
 | **Region** | `us-east-1` — create your key here |
 | **Worker role ARN** | `arn:aws:iam::123456789012:role/memento-…-worker` — arrives after provisioning, for Step 4 |
+| **Workload role ARN** | `arn:aws:iam::123456789012:role/memento-…-workload` — arrives with the worker role ARN, for Step 4. The role Memento's portal and event-consumer services run as; the portal stores your integration credentials under your key. |
+| **Webhook role ARN** | `arn:aws:iam::123456789012:role/webhook-lambda-…` — arrives with the worker role ARN, for Step 4. The role that receives webhooks from your Git and ticketing systems and verifies their signatures against secrets stored under your key. |
 | **Scheduler role ARN** | `arn:aws:iam::123456789012:role/memento-…-scheduler` — arrives after provisioning, for Step 4. A different role from the worker role above — only needed if you use Operator-Configured Schedules. |
 
 ## Step 1: Create the key
@@ -86,7 +88,7 @@ The ARN is an identifier, not a secret, so email or a ticket is fine.
 
 ## Step 4: Attach the runtime statement (Phase B)
 
-Your account team sends you the worker role ARN once your environment exists. Add to the same key policy:
+Your account team sends you the worker, workload and webhook role ARNs once your environment exists. Add all three statements to the same key policy:
 
 ```json
 {
@@ -95,8 +97,24 @@ Your account team sends you the worker role ARN once your environment exists. Ad
   "Principal": { "AWS": "MEMENTO_WORKER_ROLE_ARN" },
   "Action": ["kms:Decrypt", "kms:GenerateDataKey*", "kms:DescribeKey"],
   "Resource": "*"
+},
+{
+  "Sid": "AllowMementoWorkloadRuntimeUse",
+  "Effect": "Allow",
+  "Principal": { "AWS": "MEMENTO_WORKLOAD_ROLE_ARN" },
+  "Action": ["kms:Decrypt", "kms:GenerateDataKey*", "kms:DescribeKey"],
+  "Resource": "*"
+},
+{
+  "Sid": "AllowMementoWebhookDecrypt",
+  "Effect": "Allow",
+  "Principal": { "AWS": "MEMENTO_WEBHOOK_ROLE_ARN" },
+  "Action": ["kms:Decrypt"],
+  "Resource": "*"
 }
 ```
+
+Three statements because they are three different roles, each doing one job: the worker runs your processes; the workload role is what Memento's portal and event-consumer services run as, and the portal is what stores your integration credentials (Jira, GitHub, and so on) under your key when you connect them; the webhook role receives events from those systems and reads the same secrets to verify each event's signature — decrypt only, it never creates anything. Without the second statement, connecting an integration in the portal fails; without the third, every webhook from your systems is rejected.
 
 If you plan to use Operator-Configured Schedules, also add the scheduler role statement (the ARN arrives at the same time as the worker role ARN):
 
@@ -135,7 +153,7 @@ All KMS calls Memento makes against your key appear in your own CloudTrail.
 | Memento says the ARN is invalid | An alias ARN was sent — send the one containing `:key/` |
 | Memento says the key is in the wrong region | KMS keys are regional; create it in the region you were given |
 | Memento says the key type is unsupported | Create a symmetric encrypt/decrypt key, not asymmetric or HMAC |
-| `MalformedPolicyDocument` on a Phase B statement | Check the worker or scheduler role ARN, whichever statement failed. If it is correct, wait a minute and retry — IAM is eventually consistent and briefly rejects policies naming a just-created role |
+| `MalformedPolicyDocument` on a Phase B statement | Check the worker, workload, webhook or scheduler role ARN, whichever statement failed. If it is correct, wait a minute and retry — IAM is eventually consistent and briefly rejects policies naming a just-created role |
 | Provisioning fails with a KMS access error | The Phase A statement names the wrong principal — check it against the ARN for **this** environment |
 
 ## License
