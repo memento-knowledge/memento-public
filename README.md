@@ -57,4 +57,4 @@ MIT — see [LICENSE](LICENSE).
 ## Contact
 
 Questions, or found something that needs a closer look?
-security@memento-knowledge.com
+contact@memento-knowledge.com
