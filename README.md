@@ -45,9 +45,7 @@ integrations/
     ├── README.md
     └── mu-plugins/
         └── memento-application-passwords.php
-guides/
-├── byok-setup.md
-└── customer-aws-setup.md
+
 ```
 
 ## License
