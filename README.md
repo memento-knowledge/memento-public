@@ -47,6 +47,7 @@ integrations/
         └── memento-application-passwords.php
 guides/
 ├── byok-setup.md
+├── byom-setup.md
 └── customer-aws-setup.md
 ```
 
